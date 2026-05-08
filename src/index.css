@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Lato:wght@300;400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+html, body {
+  scroll-behavior: smooth;
+}
+
+/* ── Light Theme ── */
+.light {
+  background-color: #f6f3ee;
+  color: #221a0c;
+  min-height: 100vh;
+}
+
+/* ── Dark Theme ── */
+.dark {
+  background-color: #0d0d0d;
+  color: #e8dfd0;
+  min-height: 100vh;
+}
+
+/* Dark theme overrides */
+.dark .bg-white         { background-color: #1a1a1a !important; }
+.dark .bg-earth-50      { background-color: #111111 !important; }
+.dark .bg-earth-100     { background-color: #1e1e1e !important; }
+.dark .text-earth-800   { color: #e8dfd0 !important; }
+.dark .text-earth-700   { color: #d4c3a3 !important; }
+.dark .text-earth-600   { color: #b89e72 !important; }
+.dark .text-earth-500   { color: #a08050 !important; }
+.dark .text-earth-400   { color: #7d6238 !important; }
+.dark .text-earth-900   { color: #f6f3ee !important; }
+.dark .border-earth-100 { border-color: #2a2a2a !important; }
+.dark .border-earth-200 { border-color: #333333 !important; }
+.dark .shadow-xl        { box-shadow: 0 20px 60px rgba(0,0,0,0.5) !important; }
+.dark .shadow-md        { box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important; }
+.dark .shadow-sm        { box-shadow: 0 2px 10px rgba(0,0,0,0.3) !important; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-fadeUp  { animation: fadeUp 0.8s ease forwards; }
+.animate-fadeIn  { animation: fadeIn 1s ease forwards; }
+.animate-float   { animation: float 4s ease-in-out infinite; }
+
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
+@keyframes weatherSlide {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  8% {
+    opacity: 1;
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+  38% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.18);
+  }
+}
+
+.animate-weatherSlide {
+  animation: weatherSlide 15s infinite ease-in-out;
+}
