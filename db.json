@@ -1,0 +1,185 @@
+{
+  "users": [
+    {
+      "id": "qXb5n0rbAHg"
+    },
+    {
+      "name": "Aayushi Nil Gaur",
+      "email": "gauraayushi2004@gmail.com",
+      "password": "Aayu@2912",
+      "phone": "09755230164",
+      "role": "farmer",
+      "createdAt": "2026-05-05T06:31:54.689Z",
+      "id": "V6NbvULILIU"
+    },
+    {
+      "name": "aayu",
+      "email": "SRL_NKGAUR@YAHOO.CO.IN",
+      "password": "Aayu@29212",
+      "phone": "09425029161",
+      "role": "buyer",
+      "createdAt": "2026-05-05T07:33:54.746Z",
+      "id": "n24G_0uwzz0"
+    },
+    {
+      "name": "Aayushi Nil Gaur",
+      "email": "aayushigaur2004@gmail.com",
+      "password": "Aayu@2912",
+      "phone": "09755230164",
+      "role": "agronomist",
+      "createdAt": "2026-05-05T11:00:56.139Z",
+      "id": "1hExW3H"
+    },
+    {
+      "name": "crop",
+      "email": "blackquala121@gmail.com",
+      "password": "1234aayuA@",
+      "phone": "1234567891",
+      "role": "farmer",
+      "createdAt": "2026-05-06T10:24:50.211Z",
+      "id": "VRC9Jne"
+    }
+  ],
+  "problems": [
+    {
+      "title": "Need help with tomato crop growth and fruit ripening",
+      "description": "I am growing tomato plants and the fruits are visible on the plant, but some tomatoes are still green/yellow and not ripening evenly. I need advice on whether this is normal or caused by lack of nutrients, sunlight, water, or disease. Please guide me with the correct solution, fertilizer, and care steps.",
+      "cropName": "Tomato",
+      "location": "Bhopal, MP",
+      "urgency": "medium",
+      "postType": "problem",
+      "category": "crop",
+      "photo": [
+        "https://agriconnect-uploads-aayu.s3.ap-south-1.amazonaws.com/problems/720b34ab-1c2f-48a3-bbc4-f26f285a6ccd.png"
+      ],
+      "farmerName": "Aayushi Nil Gaur",
+      "farmerEmail": "gauraayushi2004@gmail.com",
+      "farmerId": "V6NbvULILIU",
+      "farmerRole": "farmer",
+      "status": "open",
+      "replies": [],
+      "upvotes": 1,
+      "downvotes": 0,
+      "views": 0,
+      "postedAt": "2026-05-08T05:33:52.720Z",
+      "id": "HDiHCtB"
+    },
+    {
+      "title": "Potato tubers have black spots and damaged skin",
+      "description": "My potato crop has been harvested, but many potatoes have black spots, rough patches, and damaged skin on the surface. Some potatoes look rotten or infected from outside. I want to know whether this problem is due to disease, soil condition, excess moisture, pest attack, or harvesting damage. Please suggest the correct treatment, prevention method, and storage precautions so that the remaining potatoes do not get damaged.",
+      "cropName": "Potato",
+      "location": "Kerala",
+      "urgency": "high",
+      "postType": "problem",
+      "category": "crop",
+      "photo": [
+        "https://agriconnect-uploads-aayu.s3.ap-south-1.amazonaws.com/problems/49ce9586-bead-4d32-8eb9-25a47a2ef43e.png"
+      ],
+      "farmerName": "Aayushi Nil Gaur",
+      "farmerEmail": "gauraayushi2004@gmail.com",
+      "farmerId": "V6NbvULILIU",
+      "farmerRole": "farmer",
+      "status": "open",
+      "replies": [
+        {
+          "id": 1778219722284,
+          "text": "Your potato problem can be due to common scab / black scurf / storage rot / harvesting injury. Rough brown-black patches usually match scab-type tuber disease, while soft rotten potatoes can spread damage during storage. Common scab causes rough, corky brown lesions and is favoured by dry or alkaline soil; black scurf appears as dark patches or lumps on the tuber surface.",
+          "author": "Aayushi Nil Gaur",
+          "role": "agronomist",
+          "upvotes": 1,
+          "downvotes": 0,
+          "replies": [],
+          "repliedAt": "2026-05-08T05:55:22.284Z"
+        }
+      ],
+      "upvotes": 2,
+      "downvotes": 0,
+      "views": 0,
+      "postedAt": "2026-05-08T05:47:39.053Z",
+      "id": "nMeKpnR"
+    },
+    {
+      "title": "Wheat leaves have rust spots and yellowing problem",
+      "description": "My wheat crop leaves are showing orange-brown rust-like spots and yellowing. Some leaves are drying from the edges, and the infection seems to be spreading to nearby plants. I want to know whether this is a fungal disease like rust, nutrient deficiency, or weather-related issue. Please suggest the correct treatment, spray/fungicide, prevention method, and steps to stop the disease from spreading further.",
+      "category": "crop",
+      "urgency": "medium",
+      "location": "",
+      "cropName": "Wheat",
+      "price": "",
+      "postType": "problem",
+      "photo": [
+        "https://agriconnect-uploads-aayu.s3.ap-south-1.amazonaws.com/problems/6e02da63-a54c-492a-84fa-df129447ccd9.png"
+      ],
+      "farmerName": "crop",
+      "farmerEmail": "blackquala121@gmail.com",
+      "farmerId": "VRC9Jne",
+      "farmerRole": "farmer",
+      "status": "open",
+      "replies": [
+        {
+          "id": 1778219623902,
+          "text": "Remove or avoid using highly infected leaves/plants as they can spread spores to healthy plants.",
+          "author": "Aayushi Nil Gaur",
+          "role": "agronomist",
+          "upvotes": 1,
+          "downvotes": 0,
+          "replies": [],
+          "repliedAt": "2026-05-08T05:53:43.902Z"
+        }
+      ],
+      "likes": 0,
+      "upvotes": 0,
+      "downvotes": 0,
+      "views": 0,
+      "postedAt": "2026-05-08T05:50:47.270Z",
+      "id": "NnYnu1i"
+    },
+    {
+      "title": "Based on the symptoms, the wheat crop appears to be affected by rust disease, which is usually a fungal infection. The orange-brown spots on leaves and yellowing indicate that the disease may spread quickly if not controlled on time.",
+      "description": "General Advice:\n1. Remove or avoid using highly infected leaves/plants as they can spread spores to healthy plants.\n2. Do not over-irrigate the field, because excess moisture and humidity can increase fungal disease.\n3. Maintain proper spacing and airflow in the crop to reduce disease spread.\n4. Spray a recommended fungicide for wheat rust after consulting a local agriculture officer or KVK expert. Use the dose exactly as written on the product label.\n5. Repeat spray only if required and only as per expert recommendation.\n6. Avoid excessive nitrogen fertilizer, because it can make the crop more sensitive to disease.\n7. Monitor nearby plants regularly. If the spots are increasing, take action immediately.\n8. For the next season, use rust-resistant wheat varieties and treat seeds before sowing.\n\nThis problem should be handled early because rust can reduce wheat yield if it spreads widely.",
+      "cropName": "wheat",
+      "location": "bhopal",
+      "urgency": "medium",
+      "postType": "advice",
+      "category": "crop",
+      "photo": [],
+      "farmerName": "Aayushi Nil Gaur",
+      "farmerEmail": "aayushigaur2004@gmail.com",
+      "farmerId": "1hExW3H",
+      "farmerRole": "agronomist",
+      "status": "open",
+      "replies": [],
+      "upvotes": 0,
+      "downvotes": 0,
+      "views": 0,
+      "postedAt": "2026-05-08T05:53:08.857Z",
+      "id": "wsbL_17"
+    },
+    {
+      "title": "tomato leaves curling",
+      "description": "My tomato plant leaves are curling, shrinking, and turning yellow-green. Some leaves look twisted and weak. I want to know whether this problem is due to leaf curl virus, whitefly/thrips attack, nutrient deficiency, or watering issue. Please suggest the correct treatment, spray, prevention method, and how to stop this from spreading to other tomato plants.",
+      "category": "crop",
+      "urgency": "medium",
+      "location": "uttar pradesh",
+      "cropName": "tomato",
+      "price": "",
+      "postType": "problem",
+      "photo": [
+        "https://agriconnect-uploads-aayu.s3.ap-south-1.amazonaws.com/problems/771f6964-8bd1-43c1-95b5-4ff4b26ba608.png"
+      ],
+      "farmerName": "Aayushi Nil Gaur",
+      "farmerEmail": "gauraayushi2004@gmail.com",
+      "farmerId": "V6NbvULILIU",
+      "farmerRole": "farmer",
+      "status": "open",
+      "replies": [],
+      "likes": 0,
+      "upvotes": 1,
+      "downvotes": 0,
+      "views": 0,
+      "postedAt": "2026-05-08T06:04:38.246Z",
+      "id": "njhbU0b"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
