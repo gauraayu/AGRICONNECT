@@ -10,7 +10,38 @@ const roles = [
   { value: "agronomist", label: "Agronomist",  icon: "🔬", desc: "Provide expert advice" },
   { value: "vendor",     label: "Vendor",      icon: "🏪", desc: "Supply & distribute" },
 ];
-
+const dummyUsers = [
+  {
+    id: "demo-farmer-1",
+    name: "Ramesh Farmer",
+    email: "farmer@agri.com",
+    password: "Farmer@123",
+    phone: "+91 9876543210",
+    role: "farmer",
+    location: "Bhopal, Madhya Pradesh",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "demo-buyer-1",
+    name: "Amit Buyer",
+    email: "buyer@agri.com",
+    password: "Buyer@123",
+    phone: "+91 9876543211",
+    role: "buyer",
+    location: "Indore, Madhya Pradesh",
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: "demo-agronomist-1",
+    name: "Dr. Neha Agronomist",
+    email: "expert@agri.com",
+    password: "Expert@123",
+    phone: "+91 9876543212",
+    role: "agronomist",
+    location: "Bhopal, Madhya Pradesh",
+    createdAt: new Date().toISOString(),
+  },
+];
 const Login = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
@@ -89,33 +120,79 @@ const Login = () => {
       setError("Something went wrong. Is the server running?");
     }
   };
+const handleDemoLogin = (demoUser) => {
+  const { password, ...safeUser } = demoUser;
 
+  localStorage.setItem("agriUser", JSON.stringify(safeUser));
+  setSuccess(`Demo login successful as ${safeUser.role}! 🌾`);
+  setError("");
+
+  setTimeout(() => {
+    navigate("/");
+  }, 800);
+};
   // ── LOGIN ──
-  const handleLogin = async () => {
-    if (!form.email || !form.password) {
-      setError("Please enter email and password.");
-      return;
-    }
+  // ── LOGIN ──
+// ── LOGIN ──
+const handleLogin = async () => {
+  if (!form.email || !form.password) {
+    setError("Please enter email and password.");
+    return;
+  }
 
-    try {
-      const { data: users } = await axios.get(
-        `${API}/users?email=${form.email}&password=${form.password}`
-      );
+  // First check dummy user also
+  const dummyUser = dummyUsers.find(
+    (user) =>
+      user.email.toLowerCase() === form.email.toLowerCase() &&
+      user.password === form.password
+  );
 
-      if (users.length === 0) {
-        setError("Invalid email or password.");
-        return;
-      }
+  try {
+    const { data: users } = await axios.get(
+      `${API}/users?email=${form.email}&password=${form.password}`
+    );
 
+    // Backend user found
+    if (users.length > 0) {
       const user = users[0];
+
       localStorage.setItem("agriUser", JSON.stringify(user));
       setSuccess(`Welcome back, ${user.name}! 🌾`);
       setError("");
-      setTimeout(() => navigate("/"), 1500);
-    } catch (err) {
-      setError("Something went wrong. Is the server running?");
+
+      setTimeout(() => navigate("/"), 1000);
+      return;
     }
-  };
+
+    // Backend running but user not found, then use dummy user
+    if (dummyUser) {
+      const { password, ...safeUser } = dummyUser;
+
+      localStorage.setItem("agriUser", JSON.stringify(safeUser));
+      setSuccess(`Demo login successful as ${safeUser.role}! 🌾`);
+      setError("");
+
+      setTimeout(() => navigate("/"), 1000);
+      return;
+    }
+
+    setError("Invalid email or password.");
+  } catch (err) {
+    // Server off, then dummy login still works
+    if (dummyUser) {
+      const { password, ...safeUser } = dummyUser;
+
+      localStorage.setItem("agriUser", JSON.stringify(safeUser));
+      setSuccess(`Server is off. Demo login successful as ${safeUser.role}! 🌾`);
+      setError("");
+
+      setTimeout(() => navigate("/"), 1000);
+      return;
+    }
+
+    setError("Server is off. Please use demo credentials.");
+  }
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -318,7 +395,59 @@ const Login = () => {
                   : "Create Account 🌱"}
               </button>
             </form>
+            
 
+{isLogin && (
+  <div className="mt-6">
+    <div className="flex items-center gap-3 mb-4">
+      <div className="h-px bg-earth-200 flex-1"></div>
+      <span className="text-xs font-bold text-earth-400 uppercase tracking-widest">
+        Demo Login
+      </span>
+      <div className="h-px bg-earth-200 flex-1"></div>
+    </div>
+
+    <div className="grid grid-cols-1 gap-3">
+      {dummyUsers.map((user) => (
+        <button
+          key={user.id}
+          type="button"
+          onClick={() => handleDemoLogin(user)}
+          className="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-leaf-50 hover:bg-leaf-100 border border-leaf-200 transition-all text-left"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">
+              {user.role === "farmer"
+                ? "👨‍🌾"
+                : user.role === "buyer"
+                ? "🛒"
+                : "🔬"}
+            </span>
+
+            <div>
+              <div className="text-sm font-bold text-earth-800">
+                Login as {user.role}
+              </div>
+              <div className="text-xs text-earth-500">
+                {user.email}
+              </div>
+            </div>
+          </div>
+
+          <span className="text-xs font-bold text-leaf-700">
+            Demo
+          </span>
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
+<p className="text-center text-earth-400 text-sm mt-5"></p>
+
+<p className="text-center text-earth-400 text-sm mt-5">
+  {isLogin ? "Don't have an account? " : "Already have an account? "}
+</p>
             <p className="text-center text-earth-400 text-sm mt-5">
               {isLogin ? "Don't have an account? " : "Already have an account? "}
               <button
