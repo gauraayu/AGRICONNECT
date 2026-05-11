@@ -14,60 +14,339 @@ const schemes = [
   "🏗️ PM Dhan-Dhaanya Krishi Yojana: New scheme approved for 6 years — Check eligibility",
 ];
 
-// ── Clock Component ──
-const Clock = () => {
-  const [time, setTime] = useState(new Date());
+// ── Dropdown menu data ──
+const MARKET_MENU = [
+  {
+    label: "Marketplace",
+    path: "/marketplace",
+    icon: "🛒",
+    desc: "Buy and sell crops directly",
+  },
+  {
+    label: "Mandi Prices",
+    path: "/mandi-prices",
+    icon: "📊",
+    desc: "Check latest mandi crop rates",
+  },
+];
+const POSTS_MENU = [
+  { label: "Community Posts",  path: "/posts",                icon: "🌐", desc: "See what farmers share" },
+  { label: "Ask Crop Problem", path: "/post-problem",         icon: "❓", desc: "Get help with your crop" },
+  { label: "Farmer Questions", path: "/posts/questions",      icon: "🌾", desc: "Browse farmer queries" },
+  { label: "Expert Answers",   path: "/posts/expert-answers", icon: "🔬", desc: "Verified expert replies" },
+  { label: "My Posts",         path: "/posts/mine",           icon: "📝", desc: "Manage your posts" },
+];
+
+const SERVICES_MENU = [
+  { label: "Weather Updates",     path: "/services/weather",     icon: "⛅" },
+  { label: "Expert Connect",      path: "/expert",               icon: "🧑‍🌾" },
+  { label: "Crop Advisory", path: "/services/crop-advisory", icon: "🌱" },
+  { label: "Soil Health Guide",   path: "/services/soil",        icon: "🪱" },
+  { label: "Pest & Disease Help", path: "/services/pest",        icon: "🐛" },
+  { label: "Fertilizer Guidance", path: "/services/fertilizer",  icon: "🧪" },
+  { label: "Irrigation Tips",     path: "/services/irrigation",  icon: "💧" },
+];
+
+const SMART_MENU = [
+  { label: "AI Crop Doctor",             path: "/smart/ai-doctor",       icon: "🤖" },
+  { label: "Satellite Crop Monitoring",  path: "/smart/satellite",       icon: "🛰️" },
+  { label: "Drone / Land Rover Monitor", path: "/smart/drone",           icon: "🚁" },
+  { label: "ML Yield Prediction",        path: "/smart/yield",           icon: "📈" },
+  { label: "AR/VR Farming Training",     path: "/smart/arvr",            icon: "🥽" },
+  { label: "Smart Irrigation",           path: "/smart/irrigation",      icon: "💦" },
+  { label: "Market Demand Prediction",   path: "/smart/market-demand",   icon: "📊" },
+];
+
+const ABOUT_MENU = [
+  { label: "About AgriConnect", path: "/about",              icon: "🌿" },
+  { label: "For Farmers",       path: "/about/farmers",      icon: "👨‍🌾" },
+  { label: "For Agronomists",   path: "/about/agronomists",  icon: "🔬" },
+  { label: "For Buyers",        path: "/about/buyers",       icon: "🛒" },
+  { label: "Our Mission",       path: "/about/mission",      icon: "🎯" },
+  { label: "How It Works",      path: "/about/how-it-works", icon: "⚙️" },
+];
+
+const LANGUAGES = [
+  { code: "en",  label: "English",  native: "English",  flag: "🇬🇧" },
+  { code: "hi",  label: "Hindi",    native: "हिन्दी",     flag: "🇮🇳" },
+  { code: "hin", label: "Hinglish", native: "Hinglish", flag: "🇮🇳" },
+  { code: "mr",  label: "Marathi",  native: "मराठी",     flag: "🇮🇳" },
+  { code: "pa",  label: "Punjabi",  native: "ਪੰਜਾਬੀ",      flag: "🇮🇳" },
+];
+
+// ────────────────────────────────────────────────────
+// Reusable Dropdown
+// ────────────────────────────────────────────────────
+const NavDropdown = ({ label, items, isActive, openId, setOpenId, id, columns = 1 }) => {
+  const isOpen = openId === id;
+  const ref = useRef(null);
 
   useEffect(() => {
-    const timer = setInterval(() => setTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const hours  = time.getHours();
-  const mins   = time.getMinutes().toString().padStart(2, "0");
-  const secs   = time.getSeconds().toString().padStart(2, "0");
-  const ampm   = hours >= 12 ? "PM" : "AM";
-  const hour12 = (hours % 12 || 12).toString().padStart(2, "0");
-
-  const days   = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
-  const dayName = days[time.getDay()];
-  const date    = time.getDate();
-  const month   = months[time.getMonth()];
-  const year    = time.getFullYear();
+    const handle = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        if (openId === id) setOpenId(null);
+      }
+    };
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [openId, id, setOpenId]);
 
   return (
-    <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white/10 border border-white/15 backdrop-blur-sm">
-      <span className="text-green-400 text-sm">🕐</span>
-      <span className="text-white font-mono font-bold text-sm tracking-wider">
-        {hour12}:{mins}
-        <span className="text-green-400">:{secs}</span>
-      </span>
-      <span className="text-white/50 text-xs font-bold">{ampm}</span>
-      <div className="w-px h-4 bg-white/20 mx-0.5"></div>
-      <span className="text-white/60 text-xs font-semibold hidden lg:block">
-        {dayName}, {date} {month} {year}
-      </span>
+    <div
+      ref={ref}
+      style={{ position: "relative" }}
+      onMouseEnter={() => setOpenId(id)}
+      onMouseLeave={() => setOpenId(null)}
+    >
+      <button
+        onClick={() => setOpenId(isOpen ? null : id)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "4px",
+          padding: "8px 10px",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: 600,
+          whiteSpace: "nowrap",
+          background: isActive || isOpen ? "#16a34a" : "transparent",
+          color: isActive || isOpen ? "#fff" : "#374151",
+          border: "none",
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+        onMouseOver={(e) => {
+          if (!(isActive || isOpen)) {
+            e.currentTarget.style.background = "#f0fdf4";
+            e.currentTarget.style.color = "#15803d";
+          }
+        }}
+        onMouseOut={(e) => {
+          if (!(isActive || isOpen)) {
+            e.currentTarget.style.background = "transparent";
+            e.currentTarget.style.color = "#374151";
+          }
+        }}
+      >
+        {label}
+        <span style={{ fontSize: "10px", transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "" }}>
+          ▾
+        </span>
+      </button>
+
+      {isOpen && <div style={{ position: "absolute", left: 0, right: 0, top: "100%", height: "8px" }}></div>}
+
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: "100%",
+          marginTop: "8px",
+          width: columns === 2 ? "460px" : "256px",
+          background: "#fff",
+          borderRadius: "16px",
+          border: "1px solid #f3f4f6",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+          overflow: "hidden",
+          zIndex: 50,
+          transition: "all 0.2s",
+          transformOrigin: "top",
+          opacity: isOpen ? 1 : 0,
+          transform: isOpen ? "scale(1)" : "scale(0.95)",
+          pointerEvents: isOpen ? "auto" : "none",
+        }}
+      >
+        <div
+          style={{
+            padding: "8px",
+            display: columns === 2 ? "grid" : "block",
+            gridTemplateColumns: columns === 2 ? "1fr 1fr" : undefined,
+            gap: columns === 2 ? "4px" : undefined,
+          }}
+        >
+          {items.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              onClick={() => setOpenId(null)}
+              style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: "12px",
+                padding: "10px 12px",
+                borderRadius: "12px",
+                textDecoration: "none",
+                transition: "background 0.15s",
+              }}
+              onMouseOver={(e) => (e.currentTarget.style.background = "#f0fdf4")}
+              onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+            >
+              <span style={{ fontSize: "20px", flexShrink: 0, marginTop: "2px" }}>{item.icon}</span>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontSize: "14px", fontWeight: 600, color: "#1f2937" }}>{item.label}</div>
+                {item.desc && (
+                  <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>{item.desc}</div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
 
+// ────────────────────────────────────────────────────
+// Language Dropdown
+// ────────────────────────────────────────────────────
+const LanguageDropdown = ({ language, setLanguage, openId, setOpenId }) => {
+  const id = "lang";
+  const isOpen = openId === id;
+  const ref = useRef(null);
+  const current = LANGUAGES.find((l) => l.code === language) || LANGUAGES[0];
+
+  useEffect(() => {
+    const handle = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        if (openId === id) setOpenId(null);
+      }
+    };
+    document.addEventListener("mousedown", handle);
+    return () => document.removeEventListener("mousedown", handle);
+  }, [openId, setOpenId]);
+
+  const pick = (code) => {
+    setLanguage(code);
+    localStorage.setItem("agriLang", code);
+    setOpenId(null);
+  };
+
+  return (
+    <div ref={ref} style={{ position: "relative" }}>
+      <button
+        onClick={() => setOpenId(isOpen ? null : id)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          padding: "8px 10px",
+          borderRadius: "12px",
+          fontSize: "14px",
+          fontWeight: 600,
+          whiteSpace: "nowrap",
+          background: isOpen ? "#16a34a" : "transparent",
+          color: isOpen ? "#fff" : "#374151",
+          border: isOpen ? "1px solid transparent" : "1px solid #e5e7eb",
+          cursor: "pointer",
+          transition: "all 0.2s",
+        }}
+      >
+        <span style={{ fontSize: "16px" }}>🌐</span>
+        <span>{current.label}</span>
+        <span style={{ fontSize: "10px", transition: "transform 0.2s", transform: isOpen ? "rotate(180deg)" : "" }}>▾</span>
+      </button>
+
+      <div
+        style={{
+          position: "absolute",
+          right: 0,
+          top: "100%",
+          marginTop: "8px",
+          width: "208px",
+          background: "#fff",
+          borderRadius: "16px",
+          border: "1px solid #f3f4f6",
+          boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+          overflow: "hidden",
+          zIndex: 50,
+          transition: "all 0.2s",
+          transformOrigin: "top right",
+          opacity: isOpen ? 1 : 0,
+          transform: isOpen ? "scale(1)" : "scale(0.95)",
+          pointerEvents: isOpen ? "auto" : "none",
+        }}
+      >
+        <div
+          style={{
+            padding: "10px 16px",
+            background: "linear-gradient(to right, #16a34a, #22c55e)",
+            color: "#fff",
+            fontSize: "12px",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.05em",
+          }}
+        >
+          Choose Language
+        </div>
+        <div style={{ padding: "6px 0" }}>
+          {LANGUAGES.map((lang) => {
+            const active = lang.code === language;
+            return (
+              <button
+                key={lang.code}
+                onClick={() => pick(lang.code)}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "10px 16px",
+                  textAlign: "left",
+                  background: active ? "#f0fdf4" : "transparent",
+                  color: active ? "#15803d" : "#374151",
+                  fontWeight: active ? 700 : 500,
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                onMouseOver={(e) => {
+                  if (!active) e.currentTarget.style.background = "#f9fafb";
+                }}
+                onMouseOut={(e) => {
+                  if (!active) e.currentTarget.style.background = "transparent";
+                }}
+              >
+                <span style={{ fontSize: "18px" }}>{lang.flag}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "14px" }}>{lang.label}</div>
+                  <div style={{ fontSize: "12px", color: "#6b7280" }}>{lang.native}</div>
+                </div>
+                {active && <span style={{ color: "#16a34a", fontSize: "14px" }}>✓</span>}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ────────────────────────────────────────────────────
+// MAIN NAVBAR
+// ────────────────────────────────────────────────────
 const Navbar = ({ darkMode, setDarkMode }) => {
   const location    = useLocation();
   const navigate    = useNavigate();
   const dropdownRef = useRef(null);
 
-  const [scrolled,    setScrolled]    = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
   const [user,        setUser]        = useState(null);
   const [showNotice,  setShowNotice]  = useState(true);
+  const [openId,      setOpenId]      = useState(null);
+  const [mobileOpen,  setMobileOpen]  = useState(false);
+  const [mobileSub,   setMobileSub]   = useState(null);
+  const [language,    setLanguage]    = useState(
+    () => localStorage.getItem("agriLang") || "en"
+  );
 
+  // ── JS-based responsive (no Tailwind breakpoint dependency) ──
+  const [winW, setWinW] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const onResize = () => setWinW(window.innerWidth);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, []);
+  const isDesktop = winW >= 1100;
 
   useEffect(() => {
     const stored = localStorage.getItem("agriUser");
@@ -85,6 +364,11 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     return () => document.removeEventListener("mousedown", handle);
   }, []);
 
+  useEffect(() => {
+    setMobileOpen(false);
+    setMobileSub(null);
+  }, [location.pathname]);
+
   const logout = () => {
     localStorage.removeItem("agriUser");
     setUser(null);
@@ -100,66 +384,51 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     return "👤";
   };
 
-  const getInitial = (name) =>
-    name ? name.charAt(0).toUpperCase() : "U";
+  const getInitial = (name) => (name ? name.charAt(0).toUpperCase() : "U");
 
-  const getNavLinks = (role) => {
-    if (role === "farmer") return [
-      { label: "🏠 Home",        path: "/" },
-      { label: "🚨 Posts",    path: "/posts" },
-      { label: "🤖 AI Chat",     path: "/ai" },
-      { label: "📞 Contact",     path: "/contact" },
-      { label: "ℹ️ About",       path: "/about" },
-      { label: "👤 Profile",     path: "/profile" },
-      { label: "⚙️ Settings",    path: "/settings" },
-    ];
-    if (role === "agronomist") return [
-      { label: "🏠 Home",        path: "/" },
-      { label: "🔬 Expert View", path: "/expert" },
-      { label: "🤖 AI Chat",     path: "/ai" },
-      { label: "📞 Contact",     path: "/contact" },
-      { label: "ℹ️ About",       path: "/about" },
-      { label: "👤 Profile",     path: "/profile" },
-      { label: "⚙️ Settings",    path: "/settings" },
-    ];
-    return [
-      { label: "🏠 Home",        path: "/" },
-      { label: "🤖 AI Chat",     path: "/ai" },
-      { label: "🛒 Marketplace", path: "/marketplace" },
-      { label: "📞 Contact",     path: "/contact" },
-      { label: "ℹ️ About",       path: "/about" },
-      { label: "👤 Profile",     path: "/profile" },
-      { label: "⚙️ Settings",    path: "/settings" },
-    ];
-  };
+  const pathStarts = (prefix) =>
+    location.pathname === prefix || location.pathname.startsWith(prefix + "/");
 
-  const navLinks = getNavLinks(user?.role);
+  // ── Reusable link button style ──
+  const linkStyle = (active) => ({
+    padding: "8px 10px",
+    borderRadius: "12px",
+    fontSize: "14px",
+    fontWeight: 600,
+    whiteSpace: "nowrap",
+    textDecoration: "none",
+    background: active ? "#16a34a" : "transparent",
+    color: active ? "#fff" : "#374151",
+    transition: "all 0.2s",
+    display: "inline-block",
+  });
+
+  const mobileSections = [
+    { id: "home",        label: "Home",          path: "/",             icon: "🏠" },
+    { id: "market",      label: "Market",        icon: "🛒", items: MARKET_MENU },
+    { id: "posts",       label: "Posts",         icon: "📝", items: POSTS_MENU },
+    { id: "smart",       label: "Smart Farming", icon: "🚜", items: SMART_MENU },
+    { id: "services",    label: "Services",      icon: "🛠️", items: SERVICES_MENU },
+    { id: "about",       label: "About Us",      icon: "ℹ️", items: ABOUT_MENU },
+    { id: "contact",     label: "Contact Us",    path: "/contact",      icon: "📞" },
+  ];
 
   return (
-    <div className="fixed top-0 w-full z-50">
+    <div style={{ position: "fixed", top: 0, left: 0, right: 0, width: "100%", zIndex: 9999 }}>
 
       {/* ── GOVT SCHEMES TICKER ── */}
       {showNotice && (
-        <div
-          className="bg-amber-500 text-amber-950 flex items-center overflow-hidden"
-          style={{ height: "30px" }}
-        >
-          <div className="flex-shrink-0 bg-amber-700 text-white text-xs font-black uppercase tracking-widest px-3 h-full flex items-center z-10">
+        <div style={{ background: "#f59e0b", color: "#451a03", display: "flex", alignItems: "center", overflow: "hidden", height: "30px" }}>
+          <div style={{ flexShrink: 0, background: "#b45309", color: "#fff", fontSize: "12px", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.15em", padding: "0 12px", height: "100%", display: "flex", alignItems: "center", zIndex: 10 }}>
             📢 Govt Schemes
           </div>
-          <div className="flex-1 overflow-hidden">
-            <div
-              className="whitespace-nowrap text-xs font-semibold"
-              style={{ display: "inline-block", animation: "marquee 40s linear infinite" }}
-            >
-              {schemes.map((s, i) => <span key={i} className="mx-8">{s}</span>)}
-              {schemes.map((s, i) => <span key={`d-${i}`} className="mx-8">{s}</span>)}
+          <div style={{ flex: 1, overflow: "hidden" }}>
+            <div style={{ whiteSpace: "nowrap", fontSize: "12px", fontWeight: 600, display: "inline-block", animation: "marquee 40s linear infinite" }}>
+              {schemes.map((s, i) => <span key={i} style={{ margin: "0 32px" }}>{s}</span>)}
+              {schemes.map((s, i) => <span key={`d-${i}`} style={{ margin: "0 32px" }}>{s}</span>)}
             </div>
           </div>
-          <button
-            onClick={() => setShowNotice(false)}
-            className="flex-shrink-0 px-3 h-full flex items-center text-amber-800 hover:text-amber-950 font-bold text-sm"
-          >
+          <button onClick={() => setShowNotice(false)} style={{ flexShrink: 0, padding: "0 12px", height: "100%", display: "flex", alignItems: "center", color: "#92400e", fontWeight: 700, fontSize: "14px", background: "none", border: "none", cursor: "pointer" }}>
             ✕
           </button>
         </div>
@@ -167,316 +436,246 @@ const Navbar = ({ darkMode, setDarkMode }) => {
 
       {/* ── MAIN NAVBAR ── */}
       <nav
-  className={`w-full transition-all duration-300 ${
-    location.pathname === "/" && !scrolled
-      ? "bg-transparent shadow-none border-transparent"
-      : "bg-white/95 backdrop-blur-md shadow-md border-b border-gray-200"
-  }`}
->
-        {/* relative so clock can be absolutely centered */}
-       <div className="relative w-full px-6 py-4 flex items-center justify-between gap-8">
+        style={{
+          width: "100%",
+          background: "rgba(255,255,255,0.97)",
+          backdropFilter: "blur(8px)",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
+          borderBottom: "1px solid #e5e7eb",
+        }}
+      >
+        <div
+          style={{
+            width: "100%",
+            padding: "12px 16px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: "12px",
+          }}
+        >
 
           {/* ── Logo ── */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0 z-10">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-green-600 to-green-500 flex items-center justify-center shadow-lg p-2">
-  <img
-    src="/logo.png"
-    alt="AgriConnect"
-    className="w-full h-full object-contain"
-  />
-</div>
-          <span
-  className={`font-display font-bold text-xl tracking-wide ${
-    location.pathname === "/" && !scrolled ? "text-white" : "text-gray-900"
-  }`}
->
-  Agri<span className="text-green-500">Connect</span>
-</span>
+          <Link to="/" style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0, textDecoration: "none" }}>
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #16a34a, #22c55e)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 12px rgba(22,163,74,0.3)",
+                padding: "6px",
+              }}
+            >
+              <img src="/logo.png" alt="AgriConnect" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+              <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 800, fontSize: "18px", color: "#111827", letterSpacing: "-0.01em" }}>
+                Agri<span style={{ color: "#22c55e" }}>Connect</span>
+              </span>
+              {winW >= 640 && (
+                <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", marginTop: "2px", color: "#16a34a" }}>
+                  Grow • Connect • Prosper
+                </span>
+              )}
+            </div>
           </Link>
 
-         <div className="hidden lg:flex items-center gap-2">
+          {/* ── Desktop Nav (window >= 1100px) ── */}
+          {isDesktop && (
+            <div style={{ display: "flex", alignItems: "center", gap: "2px", flex: 1, justifyContent: "center", minWidth: 0 }}>
+              <Link to="/" style={linkStyle(location.pathname === "/")}>Home</Link>
+              <NavDropdown
+  id="market"
+  label="Market"
+  items={MARKET_MENU}
+  isActive={pathStarts("/marketplace") || pathStarts("/mandi-prices")}
+  openId={openId}
+  setOpenId={setOpenId}
+/>
+              <NavDropdown
+                id="posts"
+                label="Posts"
+                items={POSTS_MENU}
+                isActive={pathStarts("/posts") || pathStarts("/post-problem")}
+                openId={openId}
+                setOpenId={setOpenId}
+              />
+              <NavDropdown
+                id="smart"
+                label="Smart Farming"
+                items={SMART_MENU}
+                isActive={pathStarts("/smart")}
+                openId={openId}
+                setOpenId={setOpenId}
+                columns={2}
+              />
+              <NavDropdown
+                id="services"
+                label="Services"
+                items={SERVICES_MENU}
+                isActive={pathStarts("/services") || pathStarts("/expert")}
+                openId={openId}
+                setOpenId={setOpenId}
+                columns={2}
+              />
+              <NavDropdown
+                id="about"
+                label="About"
+                items={ABOUT_MENU}
+                isActive={pathStarts("/about")}
+                openId={openId}
+                setOpenId={setOpenId}
+                columns={2}
+              />
 
-  {/* Dashboard */}
-  <Link
-    to="/"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-      location.pathname === "/"
-        ? "bg-green-600 text-white shadow-md"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Dashboard
-  </Link>
-
-  {/* Posts */}
-  <Link
-    to="/posts"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-      location.pathname === "/posts"
-        ? "bg-green-600 text-white shadow-md"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Posts
-  </Link>
-
-  {/* About */}
-  <Link
-    to="/about"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-      location.pathname === "/about"
-        ? "bg-green-600 text-white shadow-md"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    About Us
-  </Link>
-
-  {/* Contact */}
-  <Link
-    to="/contact"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-      location.pathname === "/contact"
-        ? "bg-green-600 text-white shadow-md"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Contact Us
-  </Link>
-
-</div>
-<div className="hidden lg:flex items-center gap-3 ml-10">
-  <Link
-    to="/"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-      location.pathname === "/"
-        ? "bg-green-600 text-white"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Dashboard
-  </Link>
-
-  <Link
-    to="/posts"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-      location.pathname === "/posts"
-        ? "bg-green-600 text-white"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Posts
-  </Link>
-
-  <Link
-    to="/about"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-      location.pathname === "/about"
-        ? "bg-green-600 text-white"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    About Us
-  </Link>
-
-  <Link
-    to="/contact"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-      location.pathname === "/contact"
-        ? "bg-green-600 text-white"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Contact Us
-  </Link>
-</div>
-
-          {/* ── Clock — Perfectly Centered ── */}
-         {/* ── Center Nav Links ── */}
-<div className="flex items-center gap-2 flex-1 justify-center">
-  <Link
-    to="/"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-      location.pathname === "/"
-        ? "bg-green-600 text-white shadow-md"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Dashboard
-  </Link>
-
- <Link
-  to="/posts"
-  className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-    location.pathname === "/posts"
-      ? "bg-green-600 text-white shadow-md"
-      : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-  }`}
->
-  Posts
-</Link>
-
-  <Link
-    to="/about"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-      location.pathname === "/about"
-        ? "bg-green-600 text-white shadow-md"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    About Us
-  </Link>
-
-  <Link
-    to="/contact"
-    className={`px-4 py-2 rounded-xl text-sm font-semibold transition ${
-      location.pathname === "/contact"
-        ? "bg-green-600 text-white shadow-md"
-        : "text-gray-700 hover:bg-green-50 hover:text-green-700"
-    }`}
-  >
-    Contact Us
-  </Link>
-</div>
+              <Link to="/contact" style={linkStyle(pathStarts("/contact"))}>Contact</Link>
+            </div>
+          )}
 
           {/* ── Right Side ── */}
-          <div className="flex items-center gap-2 flex-shrink-0 z-10">
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
 
-            {/* Dark / Light Toggle Button */}
-            <button
-              onClick={() => setDarkMode && setDarkMode(!darkMode)}
-              className="w-9 h-9 rounded-full flex items-center justify-center bg-white/10 hover:bg-white/20 text-white transition-all duration-200 text-base"
-              title={darkMode ? "Switch to Light" : "Switch to Dark"}
-            >
-              {darkMode ? "☀️" : "🌙"}
-            </button>
+            {isDesktop && (
+              <LanguageDropdown
+                language={language}
+                setLanguage={setLanguage}
+                openId={openId}
+                setOpenId={setOpenId}
+              />
+            )}
+
+            {/* Dark/Light Toggle */}
+            {winW >= 640 && (
+              <button
+                onClick={() => setDarkMode && setDarkMode(!darkMode)}
+                style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "#f3f4f6",
+                  color: "#374151",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "16px",
+                  transition: "all 0.2s",
+                }}
+                title={darkMode ? "Switch to Light" : "Switch to Dark"}
+              >
+                {darkMode ? "☀️" : "🌙"}
+              </button>
+            )}
 
             {user ? (
-              // ── LOGGED IN ──
-              <div className="relative" ref={dropdownRef}>
-
-                {/* Profile Circle */}
+              <div ref={dropdownRef} style={{ position: "relative" }}>
                 <button
                   onClick={() => setProfileOpen((p) => !p)}
-                  className="flex items-center gap-1.5 group"
+                  style={{ display: "flex", alignItems: "center", gap: "6px", background: "none", border: "none", cursor: "pointer" }}
                   title={user.name}
                 >
-                  <div className="relative">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-leaf-300 to-leaf-600 flex items-center justify-center font-black text-white text-base shadow-lg ring-2 ring-leaf-400 ring-offset-1 ring-offset-earth-800 group-hover:ring-leaf-300 transition-all duration-200">
+                  <div style={{ position: "relative" }}>
+                    <div
+                      style={{
+                        width: "36px",
+                        height: "36px",
+                        borderRadius: "50%",
+                        background: "linear-gradient(135deg, #4ade80, #16a34a)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontWeight: 900,
+                        color: "#fff",
+                        fontSize: "14px",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+                        border: "2px solid #4ade80",
+                      }}
+                    >
                       {getInitial(user.name)}
                     </div>
-                    <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-400 rounded-full border-2 border-earth-800"></span>
+                    <span style={{ position: "absolute", bottom: 0, right: 0, width: "10px", height: "10px", background: "#4ade80", borderRadius: "50%", border: "2px solid #fff" }}></span>
                   </div>
-                  <span className={`text-white/70 text-xs transition-transform duration-200 ${profileOpen ? "rotate-180" : ""}`}>
-                    ▾
-                  </span>
+                  <span style={{ fontSize: "12px", color: "#6b7280", transform: profileOpen ? "rotate(180deg)" : "" }}>▾</span>
                 </button>
 
-                {/* ── Dropdown ── */}
                 {profileOpen && (
-                  <div className={`absolute right-0 mt-3 w-64 rounded-2xl border shadow-2xl overflow-hidden z-50 ${
-                    darkMode
-                      ? "bg-gray-900 border-gray-700"
-                      : "bg-white border-gray-100"
-                  }`}>
-
-                    {/* User Header */}
-                    <div className="px-4 py-4 bg-gradient-to-r from-leaf-600 to-leaf-800">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center font-black text-white text-xl border-2 border-white/40 flex-shrink-0">
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      marginTop: "12px",
+                      width: "256px",
+                      borderRadius: "16px",
+                      border: "1px solid #f3f4f6",
+                      boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
+                      overflow: "hidden",
+                      zIndex: 50,
+                      background: "#fff",
+                    }}
+                  >
+                    <div style={{ padding: "16px", background: "linear-gradient(to right, #16a34a, #22c55e)" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <div style={{ width: "48px", height: "48px", borderRadius: "50%", background: "rgba(255,255,255,0.2)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "#fff", fontSize: "20px", border: "2px solid rgba(255,255,255,0.4)", flexShrink: 0 }}>
                           {getInitial(user.name)}
                         </div>
-                        <div className="overflow-hidden">
-                          <div className="text-white font-bold text-sm truncate">{user.name}</div>
-                          <div className="text-leaf-200 text-xs capitalize mt-0.5">
+                        <div style={{ overflow: "hidden" }}>
+                          <div style={{ color: "#fff", fontWeight: 700, fontSize: "14px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{user.name}</div>
+                          <div style={{ color: "#dcfce7", fontSize: "12px", textTransform: "capitalize", marginTop: "2px" }}>
                             {roleIcon(user.role)} {user.role}
                           </div>
-                          <div className="text-white/50 text-xs truncate mt-0.5">{user.email}</div>
+                          <div style={{ color: "rgba(255,255,255,0.7)", fontSize: "12px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", marginTop: "2px" }}>{user.email}</div>
                         </div>
                       </div>
                     </div>
 
-                    {/* Theme Toggle in Dropdown */}
-                    <div className={`px-4 py-3 border-b ${darkMode ? "border-gray-700" : "border-gray-100"}`}>
-                      <button
-                        onClick={() => setDarkMode && setDarkMode(!darkMode)}
-                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all ${
-                          darkMode
-                            ? "bg-gray-800 hover:bg-gray-700"
-                            : "bg-gray-50 hover:bg-gray-100"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">{darkMode ? "☀️" : "🌙"}</span>
-                          <div className="text-left">
-                            <div className={`text-sm font-bold ${darkMode ? "text-white" : "text-gray-800"}`}>
-                              {darkMode ? "Light Mode" : "Dark Mode"}
-                            </div>
-                            <div className="text-xs text-gray-400">
-                              {darkMode ? "Switch to light" : "Switch to dark"}
-                            </div>
-                          </div>
-                        </div>
-                        {/* Toggle switch visual */}
-                        <div className={`w-10 h-5 rounded-full transition-all duration-300 relative ${
-                          darkMode ? "bg-leaf-500" : "bg-gray-300"
-                        }`}>
-                          <div className={`absolute top-0 w-5 h-5 rounded-full bg-white shadow-md transform transition-all duration-300 ${
-                            darkMode ? "translate-x-5" : "translate-x-0"
-                          }`}></div>
-                        </div>
-                      </button>
-                    </div>
-
-                    {/* Nav Links */}
-                    <div className="py-1.5 max-h-64 overflow-y-auto">
-                      {navLinks.map(({ label, path }) => {
+                    <div style={{ padding: "6px 0", maxHeight: "256px", overflowY: "auto" }}>
+                      {[
+                        { label: "🏠 Home",     path: "/" },
+                        { label: "🤖 AI Chat",  path: "/ai" },
+                        { label: "👤 Profile",  path: "/profile" },
+                        { label: "⚙️ Settings", path: "/settings" },
+                      ].map(({ label, path }) => {
                         const isActive = location.pathname === path;
                         return (
                           <Link
                             key={path}
                             to={path}
                             onClick={() => setProfileOpen(false)}
-                            className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
-                              isActive
-                                ? darkMode
-                                  ? "bg-leaf-900/40 text-leaf-400 font-bold"
-                                  : "bg-leaf-50 text-leaf-700 font-bold"
-                                : darkMode
-                                  ? "text-gray-300 hover:bg-gray-800 font-medium"
-                                  : "text-gray-700 hover:bg-gray-50 font-medium"
-                            }`}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "12px",
+                              padding: "10px 16px",
+                              fontSize: "14px",
+                              textDecoration: "none",
+                              background: isActive ? "#f0fdf4" : "transparent",
+                              color: isActive ? "#15803d" : "#374151",
+                              fontWeight: isActive ? 700 : 500,
+                            }}
                           >
-                            <span className="text-base w-6 text-center">
-                              {label.split(" ")[0]}
-                            </span>
+                            <span style={{ fontSize: "16px", width: "24px", textAlign: "center" }}>{label.split(" ")[0]}</span>
                             <span>{label.split(" ").slice(1).join(" ")}</span>
-                            {isActive && (
-                              <span className="ml-auto w-2 h-2 rounded-full bg-leaf-500"></span>
-                            )}
                           </Link>
                         );
                       })}
                     </div>
 
-                    {/* Logout */}
-                    <div className={`border-t py-1.5 ${darkMode ? "border-gray-700" : "border-gray-100"}`}>
+                    <div style={{ borderTop: "1px solid #f3f4f6", padding: "6px 0" }}>
                       <button
                         onClick={logout}
-                        className={`flex items-center gap-3 w-full px-4 py-2.5 text-red-500 text-sm transition-colors group ${
-                          darkMode ? "hover:bg-red-900/20" : "hover:bg-red-50"
-                        }`}
+                        style={{ display: "flex", alignItems: "center", gap: "12px", width: "100%", padding: "10px 16px", fontSize: "14px", color: "#ef4444", background: "none", border: "none", cursor: "pointer", textAlign: "left" }}
                       >
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${
-                          darkMode
-                            ? "bg-red-900/30 group-hover:bg-red-900/50"
-                            : "bg-red-50 group-hover:bg-red-100"
-                        }`}>
+                        <div style={{ width: "28px", height: "28px", borderRadius: "8px", background: "#fef2f2", display: "flex", alignItems: "center", justifyContent: "center" }}>
                           🚪
                         </div>
                         <div>
-                          <div className="font-bold text-sm">Log Out</div>
-                          <div className="text-red-300 text-xs">See you soon!</div>
+                          <div style={{ fontWeight: 700 }}>Log Out</div>
+                          <div style={{ color: "#fca5a5", fontSize: "12px" }}>See you soon!</div>
                         </div>
                       </button>
                     </div>
@@ -484,24 +683,242 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                 )}
               </div>
             ) : (
-              // ── NOT LOGGED IN ──
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/login"
-                  className="px-3 py-1.5 text-xs font-semibold text-white border border-white/30 rounded-full hover:bg-white/10 transition-all"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/login"
-                  className="px-3 py-1.5 text-xs font-semibold bg-leaf-500 text-white rounded-full hover:bg-leaf-400 shadow-md transition-all"
-                >
-                  Join Now
-                </Link>
-              </div>
+              winW >= 640 && (
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <Link
+                    to="/login"
+                    style={{
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      borderRadius: "12px",
+                      color: "#374151",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/login"
+                    style={{
+                      padding: "8px 12px",
+                      fontSize: "14px",
+                      fontWeight: 700,
+                      background: "#16a34a",
+                      color: "#fff",
+                      borderRadius: "12px",
+                      boxShadow: "0 4px 12px rgba(22,163,74,0.3)",
+                      textDecoration: "none",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Join Now
+                  </Link>
+                </div>
+              )
+            )}
+
+            {/* ── Hamburger (when not desktop) ── */}
+            {!isDesktop && (
+              <button
+                onClick={() => setMobileOpen((o) => !o)}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "12px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "5px",
+                  background: "#f0fdf4",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+                aria-label="Toggle menu"
+              >
+                <span style={{ display: "block", width: "20px", height: "2px", borderRadius: "2px", background: "#15803d", transition: "all 0.3s", transform: mobileOpen ? "rotate(45deg) translateY(7px)" : "" }}></span>
+                <span style={{ display: "block", width: "20px", height: "2px", borderRadius: "2px", background: "#15803d", transition: "all 0.3s", opacity: mobileOpen ? 0 : 1 }}></span>
+                <span style={{ display: "block", width: "20px", height: "2px", borderRadius: "2px", background: "#15803d", transition: "all 0.3s", transform: mobileOpen ? "rotate(-45deg) translateY(-7px)" : "" }}></span>
+              </button>
             )}
           </div>
         </div>
+
+        {/* ── MOBILE MENU ── */}
+        {!isDesktop && (
+          <div
+            style={{
+              overflow: "hidden",
+              transition: "max-height 0.3s ease-in-out",
+              background: "#fff",
+              borderTop: "1px solid #f3f4f6",
+              maxHeight: mobileOpen ? "80vh" : "0px",
+              overflowY: mobileOpen ? "auto" : "hidden",
+            }}
+          >
+            <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: "4px" }}>
+
+              {mobileSections.map((section) => {
+                if (section.path) {
+                  const active = section.path === "/" ? location.pathname === "/" : pathStarts(section.path);
+                  return (
+                    <Link
+                      key={section.id}
+                      to={section.path}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "12px",
+                        padding: "12px 16px",
+                        borderRadius: "12px",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                        background: active ? "#16a34a" : "transparent",
+                        color: active ? "#fff" : "#374151",
+                      }}
+                    >
+                      <span style={{ fontSize: "18px" }}>{section.icon}</span>
+                      {section.label}
+                    </Link>
+                  );
+                }
+
+                const expanded = mobileSub === section.id;
+                const sectionActive = section.items.some((i) => pathStarts(i.path));
+                return (
+                  <div key={section.id}>
+                    <button
+                      onClick={() => setMobileSub(expanded ? null : section.id)}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "12px",
+                        padding: "12px 16px",
+                        borderRadius: "12px",
+                        fontSize: "14px",
+                        fontWeight: 600,
+                        background: sectionActive ? "#f0fdf4" : "transparent",
+                        color: sectionActive ? "#15803d" : "#374151",
+                        border: "none",
+                        cursor: "pointer",
+                        textAlign: "left",
+                      }}
+                    >
+                      <span style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                        <span style={{ fontSize: "18px" }}>{section.icon}</span>
+                        {section.label}
+                      </span>
+                      <span style={{ fontSize: "12px", transform: expanded ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>▾</span>
+                    </button>
+
+                    <div style={{ overflow: "hidden", maxHeight: expanded ? "600px" : "0px", transition: "max-height 0.3s", marginTop: expanded ? "4px" : 0 }}>
+                      <div style={{ paddingLeft: "12px", borderLeft: "2px solid #bbf7d0", marginLeft: "20px", display: "flex", flexDirection: "column", gap: "2px", padding: "4px 0 4px 12px" }}>
+                        {section.items.map((item) => {
+                          const active = location.pathname === item.path;
+                          return (
+                            <Link
+                              key={item.path}
+                              to={item.path}
+                              style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                padding: "8px 12px",
+                                borderRadius: "8px",
+                                fontSize: "14px",
+                                textDecoration: "none",
+                                background: active ? "#dcfce7" : "transparent",
+                                color: active ? "#15803d" : "#4b5563",
+                                fontWeight: active ? 700 : 500,
+                              }}
+                            >
+                              <span style={{ fontSize: "16px" }}>{item.icon}</span>
+                              {item.label}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {/* Mobile language */}
+              <div style={{ paddingTop: "12px", borderTop: "1px solid #f3f4f6", marginTop: "12px" }}>
+                <div style={{ fontSize: "12px", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: "0.05em", padding: "0 16px", marginBottom: "8px" }}>
+                  🌐 Language
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", padding: "0 8px" }}>
+                  {LANGUAGES.map((lang) => {
+                    const active = lang.code === language;
+                    return (
+                      <button
+                        key={lang.code}
+                        onClick={() => {
+                          setLanguage(lang.code);
+                          localStorage.setItem("agriLang", lang.code);
+                        }}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: "8px 12px",
+                          borderRadius: "8px",
+                          fontSize: "14px",
+                          background: active ? "#16a34a" : "#f9fafb",
+                          color: active ? "#fff" : "#374151",
+                          fontWeight: active ? 700 : 500,
+                          border: "none",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <span>{lang.flag}</span>
+                        <span style={{ fontSize: "12px" }}>{lang.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {!user && (
+                <div style={{ paddingTop: "12px", borderTop: "1px solid #f3f4f6", marginTop: "12px", display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", padding: "12px 8px 0" }}>
+                  <Link
+                    to="/login"
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px 16px", fontSize: "14px", fontWeight: 600, color: "#374151", background: "#f3f4f6", borderRadius: "12px", textDecoration: "none" }}
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    to="/login"
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px 16px", fontSize: "14px", fontWeight: 700, color: "#fff", background: "#16a34a", borderRadius: "12px", boxShadow: "0 4px 12px rgba(22,163,74,0.3)", textDecoration: "none" }}
+                  >
+                    Join Now
+                  </Link>
+                </div>
+              )}
+
+              <div style={{ paddingTop: "12px", borderTop: "1px solid #f3f4f6", marginTop: "12px", padding: "12px 8px 0" }}>
+                <button
+                  onClick={() => setDarkMode && setDarkMode(!darkMode)}
+                  style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", borderRadius: "12px", background: "#f9fafb", border: "none", cursor: "pointer" }}
+                >
+                  <span style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px", fontWeight: 600, color: "#374151" }}>
+                    <span style={{ fontSize: "18px" }}>{darkMode ? "☀️" : "🌙"}</span>
+                    {darkMode ? "Light Mode" : "Dark Mode"}
+                  </span>
+                  <div style={{ width: "40px", height: "20px", borderRadius: "10px", background: darkMode ? "#22c55e" : "#d1d5db", position: "relative", transition: "all 0.3s" }}>
+                    <div style={{ position: "absolute", top: 0, width: "20px", height: "20px", borderRadius: "50%", background: "#fff", boxShadow: "0 2px 4px rgba(0,0,0,0.15)", transform: darkMode ? "translateX(20px)" : "translateX(0)", transition: "transform 0.3s" }}></div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
     </div>
   );
