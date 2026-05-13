@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import WeatherWidget from "../components/WeatherWidget";
 import { createPortal } from "react-dom";
 import FarmerDashboard from "./FarmerDashboard";
+import phoneMockVideo from "../assets/home/phonemock.mp4";
 import axios from "axios";
 import farmVideo from "../assets/farm-video.mp4";
 import gogLogo from "../assets/gog-logo.png";
@@ -17,7 +18,7 @@ import aiDiagnoseImg from "../assets/home/ai-diagnostic.jpg";
 import satelliteImg from "../assets/home/satellite.jpg";
 import droneImg from "../assets/home/drone.jpg";
 
-import phoneMockImg from "../assets/home/phone-mockup.jpg";
+// import phoneMockImg from "../assets/home/phone-mockup.jpg";
 import smartIrrigationImg from "../assets/home/smart-irrigation.jpg";
 import marketDemandImg from "../assets/home/market-demand.jpg";
 
@@ -480,7 +481,7 @@ const IMG = {
   drone: droneImg,
   smartIrrigation: smartIrrigationImg,
   marketDemand: marketDemandImg,
-  phoneMock: phoneMockImg,
+  // phoneMock: phoneMockImg,
   ctaFarmer: "https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=700&auto=format&fit=crop",
 };
 
@@ -496,7 +497,6 @@ const heroSlides = [
   "https://images.unsplash.com/photo-1518843875459-f738682238a6?w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1582515073490-39981397c445?w=1600&auto=format&fit=crop",
   "https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=1600&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?w=1600&auto=format&fit=crop",
 ];
 
 // ─────────────────────────────────────────────────────────────────
@@ -557,7 +557,33 @@ const translateQuantity = (quantityStr, t) => {
   // Match number + "quintal" with any spacing
   return String(quantityStr).replace(/quintal/i, t("unitQuintal"));
 };
+const PhoneMockVideo = () => {
+  return (
+    <div className="relative flex justify-center lg:justify-end items-center">
+      {/* soft glow */}
+      <div className="absolute w-[360px] h-[360px] bg-green-300/35 blur-3xl rounded-full"></div>
 
+      {/* clean video card - no extra phone frame */}
+      <div className="relative w-[280px] sm:w-[330px] lg:w-[360px] rounded-[2.2rem] bg-white p-3 shadow-[0_30px_90px_rgba(15,23,42,0.18)] border border-green-100">
+        <div className="relative rounded-[1.8rem] overflow-hidden bg-slate-100 aspect-[9/16]">
+          <video
+            key={phoneMockVideo}
+            src={phoneMockVideo}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="w-full h-full object-cover"
+          />
+
+          {/* soft shine */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/20"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
 // ═══════════════════════════════════════════════════════════════════
 // DEFAULT HOME — with i18n
 // ═══════════════════════════════════════════════════════════════════
@@ -587,7 +613,7 @@ const DefaultHome = () => {
       key: "farmer",
       title: t("forFarmers"),
       image: IMG.farmer,
-      color: "from-green-600 to-emerald-700",
+      // color: "from-green-600 to-emerald-700",
       bullets: [t("directSelling"), t("pestDiagnosis"), t("expertAssistance")],
       path: "/login",
       popupTitle: t("howHelpsFarmers"),
@@ -599,7 +625,7 @@ const DefaultHome = () => {
       key: "agronomist",
       title: t("forAgronomists"),
       image: IMG.agronomist,
-      color: "from-amber-600 to-orange-700",
+      // color: "from-amber-600 to-orange-700",
       bullets: [t("caseManagement"), t("analyticsDashboard"), t("reputationBadges")],
       path: "/login",
       popupTitle: t("howHelpsAgronomists"),
@@ -611,7 +637,7 @@ const DefaultHome = () => {
       key: "buyer",
       title: t("forBuyers"),
       image: IMG.buyer,
-      color: "from-slate-700 to-slate-900",
+      // color: "from-slate-700 to-slate-900",
       bullets: [t("bulkOrders"), t("qualityChecks"), t("traceability")],
       path: "/marketplace",
       popupTitle: t("howHelpsBuyers"),
@@ -701,118 +727,249 @@ return (
   <div className="bg-slate-50">
 
       {/* ════════════ HERO ════════════ */}
-      <section className="relative pt-24 pb-16 overflow-hidden min-h-screen flex items-center">
-        <div className="absolute inset-0">
-          {heroSlides.map((slide, index) => (
-            <img key={index} src={slide} alt=""
-              className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${index === currentSlide ? "opacity-100 scale-105" : "opacity-0 scale-100"}`} />
-          ))}
-          <div className="absolute inset-0 bg-gradient-to-r from-white/65 via-white/25 to-black/20"></div>
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
-            {heroSlides.map((_, index) => (
-              <button key={index} onClick={() => setCurrentSlide(index)}
-                className={`h-2 rounded-full transition-all duration-300 ${index === currentSlide ? "w-8 bg-green-600" : "w-2 bg-white/70 hover:bg-white"}`} />
-            ))}
+      {/* ════════════ HERO ════════════ */}
+<section className="relative pt-24 pb-16 overflow-hidden min-h-screen flex items-center">
+  <div className="absolute inset-0">
+    {heroSlides.map((slide, index) => (
+      <img
+        key={index}
+        src={slide}
+        alt=""
+        className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out ${
+          index === currentSlide ? "opacity-100 scale-105" : "opacity-0 scale-100"
+        }`}
+      />
+    ))}
+
+    {/* Only text readability overlay - photo same rahegi */}
+    <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/35 to-transparent"></div>
+    <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10"></div>
+
+    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+      {heroSlides.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => setCurrentSlide(index)}
+          className={`h-2 rounded-full transition-all duration-300 ${
+            index === currentSlide
+              ? "w-8 bg-green-500"
+              : "w-2 bg-white/70 hover:bg-white"
+          }`}
+        />
+      ))}
+    </div>
+  </div>
+
+  <div className="absolute top-20 -left-20 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+  <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20"></div>
+
+  <div className="relative z-10 max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <ScrollReveal from="left" className="max-w-2xl">
+      <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-green-300 text-green-800 text-xs font-black uppercase tracking-widest mb-6 shadow-lg">
+        <Sprout className="w-3.5 h-3.5" />
+        {t("heroBadge")}
+      </div>
+
+      <h1
+        className="font-black text-4xl md:text-6xl text-white leading-tight mb-5 tracking-tight"
+        style={{
+          textShadow: "0 5px 18px rgba(0,0,0,0.85)",
+        }}
+      >
+        {t("heroTitle1")}
+        <br />
+        <span
+          className="text-green-300 font-black"
+          style={{
+            textShadow: "0 5px 18px rgba(0,0,0,0.9)",
+          }}
+        >
+          {t("heroTitle2")}
+        </span>
+      </h1>
+
+      <p
+        className="text-white text-base md:text-lg leading-relaxed mb-8 max-w-xl font-bold"
+        style={{
+          textShadow: "0 3px 12px rgba(0,0,0,0.9)",
+        }}
+      >
+        {t("heroDesc")}
+      </p>
+
+      <div className="flex flex-wrap gap-3">
+        <Link
+          to="/mandi-prices"
+          className="flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-black rounded-xl shadow-xl transition-all hover:-translate-y-0.5"
+        >
+          <BarChart2 className="w-4 h-4" />
+          {t("btnCheckMandi")}
+        </Link>
+
+        <Link
+          to="/login"
+          className="flex items-center gap-2 px-6 py-3 bg-white text-green-800 font-black rounded-xl border border-white hover:bg-green-50 shadow-xl transition-all hover:-translate-y-0.5"
+        >
+          <Users className="w-4 h-4" />
+          {t("btnJoinNow")}
+        </Link>
+      </div>
+    </ScrollReveal>
+
+    <ScrollReveal from="right" delay={150} className="relative hidden lg:block">
+      <div className="relative max-w-md mx-auto">
+        <div className="relative rounded-[2rem] bg-white/85 backdrop-blur-xl border border-white/70 shadow-2xl p-6 overflow-hidden">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <p className="text-xs font-bold text-green-600 uppercase tracking-widest">
+                {t("agriConnectLive")}
+              </p>
+              <h3 className="text-2xl font-black text-gray-900 mt-1">
+                {t("smartFarmDashboard")}
+              </h3>
+            </div>
+
+            <div className="w-12 h-12 rounded-2xl bg-green-600 flex items-center justify-center shadow-lg">
+              <Leaf className="w-6 h-6 text-white" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="rounded-2xl bg-green-50 border border-green-100 p-4">
+              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center mb-3 shadow-sm">
+                <CloudSun className="w-5 h-5 text-green-600" />
+              </div>
+              <p className="text-xs text-gray-500 font-semibold">{t("weather")}</p>
+              <h4 className="text-xl font-black text-gray-900">29°C</h4>
+              <p className="text-xs text-green-700 font-semibold mt-1">
+                {t("goodIrrigation")}
+              </p>
+            </div>
+
+            <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
+              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center mb-3 shadow-sm">
+                <BarChart2 className="w-5 h-5 text-amber-600" />
+              </div>
+              <p className="text-xs text-gray-500 font-semibold">
+                {t("mandiPrice")}
+              </p>
+              <h4 className="text-xl font-black text-gray-900">₹2,300</h4>
+              <p className="text-xs text-green-700 font-semibold mt-1">
+                {t("wheatUp")}
+              </p>
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-gradient-to-r from-green-600 to-emerald-700 p-5 text-white mb-4 shadow-lg">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                <Bot className="w-6 h-6 text-white" />
+              </div>
+
+              <div className="flex-1">
+                <h4 className="font-bold text-base">{t("aiCropDoctor")}</h4>
+                <p className="text-green-100 text-xs mt-1">
+                  {t("aiCropDoctorDesc")}
+                </p>
+              </div>
+
+              <ArrowUpRight className="w-5 h-5 text-white" />
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white border border-gray-100 p-4 shadow-sm mb-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-bold text-gray-900">{t("cropHealth")}</p>
+              <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">
+                {t("healthy")}
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <div className="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                  <span>{t("wheatField")}</span>
+                  <span>88%</span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-green-600 rounded-full"
+                    style={{ width: "88%" }}
+                  ></div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs font-semibold text-gray-600 mb-1">
+                  <span>{t("soilMoisture")}</span>
+                  <span>72%</span>
+                </div>
+                <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-emerald-500 rounded-full"
+                    style={{ width: "72%" }}
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            <div className="text-center rounded-xl bg-gray-50 p-3">
+              <Users className="w-5 h-5 text-green-600 mx-auto mb-1" />
+              <p className="text-sm font-black text-gray-900">50K+</p>
+              <p className="text-[10px] text-gray-500 font-semibold">
+                {t("farmers")}
+              </p>
+            </div>
+
+            <div className="text-center rounded-xl bg-gray-50 p-3">
+              <ShoppingCart className="w-5 h-5 text-green-600 mx-auto mb-1" />
+              <p className="text-sm font-black text-gray-900">120+</p>
+              <p className="text-[10px] text-gray-500 font-semibold">
+                {t("crops")}
+              </p>
+            </div>
+
+            <div className="text-center rounded-xl bg-gray-50 p-3">
+              <MapPin className="w-5 h-5 text-green-600 mx-auto mb-1" />
+              <p className="text-sm font-black text-gray-900">28</p>
+              <p className="text-[10px] text-gray-500 font-semibold">
+                {t("states")}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div className="absolute top-20 -left-20 w-72 h-72 bg-green-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-        <div className="absolute bottom-10 right-1/4 w-80 h-80 bg-emerald-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
-
-        <div className="relative max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <ScrollReveal from="left" className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/95 border border-green-300 text-green-800 text-xs font-black uppercase tracking-widest mb-6 shadow-lg">
-              <Sprout className="w-3.5 h-3.5" />
-              {t("heroBadge")}
-            </div>
-            <h1 className="font-black text-4xl md:text-6xl text-slate-950 leading-tight mb-5" style={{ textShadow: "0 3px 10px rgba(255,255,255,0.95)" }}>
-              {t("heroTitle1")}<br />
-              <span className="text-green-700" style={{ textShadow: "0 3px 10px rgba(255,255,255,0.95)" }}>{t("heroTitle2")}</span>
-            </h1>
-            <p className="text-slate-900 text-base md:text-lg leading-relaxed mb-8 max-w-xl font-semibold" style={{ textShadow: "0 2px 8px rgba(255,255,255,0.95)" }}>
-              {t("heroDesc")}
+        <div className="absolute -top-5 -left-6 bg-white rounded-2xl shadow-xl border border-green-100 px-4 py-3 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center">
+            <TrendingUp className="w-5 h-5 text-green-600" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-gray-900">{t("priceAlert")}</p>
+            <p className="text-[11px] text-green-600 font-semibold">
+              {t("soybeanRising")}
             </p>
-            <div className="flex flex-wrap gap-3">
-              <Link to="/mandi-prices" className="flex items-center gap-2 px-6 py-3 bg-green-700 hover:bg-green-800 text-white font-bold rounded-xl shadow-lg transition-all hover:-translate-y-0.5">
-                <BarChart2 className="w-4 h-4" /> {t("btnCheckMandi")}
-              </Link>
-              <Link to="/login" className="flex items-center gap-2 px-6 py-3 bg-white/95 text-green-800 font-bold rounded-xl border border-green-300 hover:border-green-500 hover:bg-green-50 shadow-lg transition-all hover:-translate-y-0.5">
-                <Users className="w-4 h-4" /> {t("btnJoinNow")}
-              </Link>
-            </div>
-          </ScrollReveal>
-
-          <ScrollReveal from="right" delay={150} className="relative hidden lg:block">
-            <div className="relative max-w-md mx-auto">
-              <div className="relative rounded-[2rem] bg-white/85 backdrop-blur-xl border border-white/70 shadow-2xl p-6 overflow-hidden">
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <p className="text-xs font-bold text-green-600 uppercase tracking-widest">{t("agriConnectLive")}</p>
-                    <h3 className="text-2xl font-black text-gray-900 mt-1">{t("smartFarmDashboard")}</h3>
-                  </div>
-                  <div className="w-12 h-12 rounded-2xl bg-green-600 flex items-center justify-center shadow-lg">
-                    <Leaf className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="rounded-2xl bg-green-50 border border-green-100 p-4">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center mb-3 shadow-sm"><CloudSun className="w-5 h-5 text-green-600" /></div>
-                    <p className="text-xs text-gray-500 font-semibold">{t("weather")}</p>
-                    <h4 className="text-xl font-black text-gray-900">29°C</h4>
-                    <p className="text-xs text-green-700 font-semibold mt-1">{t("goodIrrigation")}</p>
-                  </div>
-                  <div className="rounded-2xl bg-amber-50 border border-amber-100 p-4">
-                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center mb-3 shadow-sm"><BarChart2 className="w-5 h-5 text-amber-600" /></div>
-                    <p className="text-xs text-gray-500 font-semibold">{t("mandiPrice")}</p>
-                    <h4 className="text-xl font-black text-gray-900">₹2,300</h4>
-                    <p className="text-xs text-green-700 font-semibold mt-1">{t("wheatUp")}</p>
-                  </div>
-                </div>
-                <div className="rounded-2xl bg-gradient-to-r from-green-600 to-emerald-700 p-5 text-white mb-4 shadow-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center"><Bot className="w-6 h-6 text-white" /></div>
-                    <div className="flex-1">
-                      <h4 className="font-bold text-base">{t("aiCropDoctor")}</h4>
-                      <p className="text-green-100 text-xs mt-1">{t("aiCropDoctorDesc")}</p>
-                    </div>
-                    <ArrowUpRight className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-                <div className="rounded-2xl bg-white border border-gray-100 p-4 shadow-sm mb-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-bold text-gray-900">{t("cropHealth")}</p>
-                    <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">{t("healthy")}</span>
-                  </div>
-                  <div className="space-y-3">
-                    <div>
-                      <div className="flex justify-between text-xs font-semibold text-gray-600 mb-1"><span>{t("wheatField")}</span><span>88%</span></div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-green-600 rounded-full" style={{ width: "88%" }}></div></div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-xs font-semibold text-gray-600 mb-1"><span>{t("soilMoisture")}</span><span>72%</span></div>
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden"><div className="h-full bg-emerald-500 rounded-full" style={{ width: "72%" }}></div></div>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="text-center rounded-xl bg-gray-50 p-3"><Users className="w-5 h-5 text-green-600 mx-auto mb-1" /><p className="text-sm font-black text-gray-900">50K+</p><p className="text-[10px] text-gray-500 font-semibold">{t("farmers")}</p></div>
-                  <div className="text-center rounded-xl bg-gray-50 p-3"><ShoppingCart className="w-5 h-5 text-green-600 mx-auto mb-1" /><p className="text-sm font-black text-gray-900">120+</p><p className="text-[10px] text-gray-500 font-semibold">{t("crops")}</p></div>
-                  <div className="text-center rounded-xl bg-gray-50 p-3"><MapPin className="w-5 h-5 text-green-600 mx-auto mb-1" /><p className="text-sm font-black text-gray-900">28</p><p className="text-[10px] text-gray-500 font-semibold">{t("states")}</p></div>
-                </div>
-              </div>
-              <div className="absolute -top-5 -left-6 bg-white rounded-2xl shadow-xl border border-green-100 px-4 py-3 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center"><TrendingUp className="w-5 h-5 text-green-600" /></div>
-                <div><p className="text-xs font-bold text-gray-900">{t("priceAlert")}</p><p className="text-[11px] text-green-600 font-semibold">{t("soybeanRising")}</p></div>
-              </div>
-              <div className="absolute -bottom-5 -right-6 bg-white rounded-2xl shadow-xl border border-green-100 px-4 py-3 flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center"><Check className="w-5 h-5 text-amber-600" /></div>
-                <div><p className="text-xs font-bold text-gray-900">{t("verifiedBuyers")}</p><p className="text-[11px] text-gray-500 font-semibold">{t("directCropDeals")}</p></div>
-              </div>
-            </div>
-          </ScrollReveal>
+          </div>
         </div>
-      </section>
 
+        <div className="absolute -bottom-5 -right-6 bg-white rounded-2xl shadow-xl border border-green-100 px-4 py-3 flex items-center gap-3">
+          <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center">
+            <Check className="w-5 h-5 text-amber-600" />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-gray-900">
+              {t("verifiedBuyers")}
+            </p>
+            <p className="text-[11px] text-gray-500 font-semibold">
+              {t("directCropDeals")}
+            </p>
+          </div>
+        </div>
+      </div>
+    </ScrollReveal>
+  </div>
+</section>
     {/* ════════════════════════════════════════════════════════ */}
 {/* ════════════════════════════════════════════════════════ */}
 {/* ACTIVE MARKETPLACE */}
@@ -1233,7 +1390,93 @@ return (
     })}
   </div>
 </ProfessionalSection>
+{/* ════════════ MOBILE APP VIDEO PREVIEW ════════════ */}
+<section className="relative min-h-screen flex items-center overflow-hidden py-20 bg-gradient-to-br from-white via-green-50 to-emerald-100">
+  {/* background blobs */}
+  <div className="absolute -top-24 -left-24 w-96 h-96 bg-green-300/25 rounded-full blur-3xl"></div>
+  <div className="absolute bottom-0 -right-24 w-96 h-96 bg-emerald-300/25 rounded-full blur-3xl"></div>
 
+  {/* dotted pattern */}
+  <div
+    className="absolute inset-0 opacity-[0.045]"
+    style={{
+      backgroundImage:
+        "radial-gradient(circle at 1px 1px, #14532d 1px, transparent 0)",
+      backgroundSize: "26px 26px",
+    }}
+  ></div>
+
+  <div className="relative z-10 max-w-7xl mx-auto px-6 w-full">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+      {/* Left Content */}
+      <ScrollReveal from="left">
+        <div className="max-w-xl">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 border border-green-200 text-green-700 text-xs font-black uppercase tracking-widest mb-5 shadow-sm">
+            <Phone className="w-4 h-4" />
+            Mobile App Preview
+          </div>
+
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 leading-[1.05] mb-6 tracking-tight">
+            Upload Crops
+            <span className="block text-green-700">
+              Easily from Mobile
+            </span>
+          </h2>
+
+          <p className="text-slate-600 text-base md:text-lg leading-relaxed font-medium mb-8 max-w-lg">
+            Farmers can upload crop details, add price, quantity, location and
+            manage crop listings directly from a simple mobile dashboard.
+          </p>
+
+          <div className="space-y-4 mb-9">
+            <div className="flex items-start gap-4">
+              <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <Check className="w-4 h-4 text-green-700" />
+              </div>
+
+              <p className="text-slate-700 font-bold leading-relaxed">
+                Upload crop name, crop image, quantity and price.
+              </p>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <Check className="w-4 h-4 text-green-700" />
+              </div>
+
+              <p className="text-slate-700 font-bold leading-relaxed">
+                Show uploaded crops in a clean marketplace listing.
+              </p>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-9 h-9 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                <Check className="w-4 h-4 text-green-700" />
+              </div>
+
+              <p className="text-slate-700 font-bold leading-relaxed">
+                Mobile-friendly interface for farmers, buyers and agronomists.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to="/marketplace"
+            className="inline-flex items-center gap-2 px-7 py-4 bg-green-600 hover:bg-green-700 text-white font-black rounded-2xl shadow-[0_14px_35px_rgba(22,163,74,0.28)] transition-all hover:-translate-y-1"
+          >
+            Explore Marketplace
+            <ArrowUpRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </ScrollReveal>
+
+      {/* Right Video */}
+      <ScrollReveal from="right" delay={150}>
+        <PhoneMockVideo />
+      </ScrollReveal>
+    </div>
+  </div>
+</section>
 {/* ════════════ WEATHER & ADVISORY ════════════ */}
 <section
   ref={weatherSectionRef}

@@ -318,6 +318,7 @@ const NavDropdown = ({
   setOpenId,
   id,
   columns = 1,
+  onItemClick,
 }) => {
   const isOpen = openId === id;
   const ref = useRef(null);
@@ -426,7 +427,14 @@ const NavDropdown = ({
             <Link
               key={item.path}
               to={item.path}
-              onClick={() => setOpenId(null)}
+              onClick={(e) => {
+                if (onItemClick) {
+                  const allowed = onItemClick(e, item);
+                  if (allowed === false) return;
+                }
+
+                setOpenId(null);
+              }}
               style={{
                 display: "flex",
                 alignItems: "flex-start",
@@ -644,6 +652,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
   const [openId, setOpenId] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSub, setMobileSub] = useState(null);
+  const [showFarmerLoginPopup, setShowFarmerLoginPopup] = useState(false);
 
   const language = lang;
   const setLanguage = setLang;
@@ -722,6 +731,22 @@ const Navbar = ({ darkMode, setDarkMode }) => {
     transition: "all 0.2s",
     display: "inline-block",
   });
+
+  const handleProtectedMenuClick = (e, item) => {
+    const isHomePage = location.pathname === "/";
+    const isNotLoggedIn = !user;
+
+    if (item?.path === "/post-problem" && isHomePage && isNotLoggedIn) {
+      e.preventDefault();
+      setOpenId(null);
+      setMobileOpen(false);
+      setMobileSub(null);
+      setShowFarmerLoginPopup(true);
+      return false;
+    }
+
+    return true;
+  };
 
   const profileMenu = [
     {
@@ -1005,6 +1030,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                   isActive={pathStarts("/posts") || pathStarts("/post-problem")}
                   openId={openId}
                   setOpenId={setOpenId}
+                  onItemClick={handleProtectedMenuClick}
                 />
 
                 <NavDropdown
@@ -1559,6 +1585,14 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                               <Link
                                 key={item.path}
                                 to={item.path}
+                                onClick={(e) => {
+                                  const allowed = handleProtectedMenuClick(e, item);
+
+                                  if (allowed !== false) {
+                                    setMobileOpen(false);
+                                    setMobileSub(null);
+                                  }
+                                }}
                                 style={{
                                   display: "flex",
                                   alignItems: "center",
@@ -1781,6 +1815,167 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           )}
         </nav>
       </div>
+      {showFarmerLoginPopup && (
+        <div
+          onClick={() => setShowFarmerLoginPopup(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.55)",
+            backdropFilter: "blur(6px)",
+            zIndex: 10000,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "100%",
+              maxWidth: "430px",
+              background: "#fff",
+              borderRadius: "28px",
+              overflow: "hidden",
+              boxShadow: "0 30px 80px rgba(0,0,0,0.3)",
+            }}
+          >
+            <div
+              style={{
+                background: "linear-gradient(135deg, #15803d, #16a34a)",
+                padding: "28px",
+                color: "#fff",
+                position: "relative",
+              }}
+            >
+              <button
+                onClick={() => setShowFarmerLoginPopup(false)}
+                style={{
+                  position: "absolute",
+                  top: "14px",
+                  right: "14px",
+                  width: "34px",
+                  height: "34px",
+                  borderRadius: "50%",
+                  border: "none",
+                  background: "rgba(255,255,255,0.18)",
+                  color: "#fff",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                aria-label="Close popup"
+              >
+                <FaTimes />
+              </button>
+
+              <div
+                style={{
+                  width: "64px",
+                  height: "64px",
+                  borderRadius: "20px",
+                  background: "rgba(255,255,255,0.16)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "34px",
+                  marginBottom: "16px",
+                }}
+              >
+                👨‍🌾
+              </div>
+
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: "26px",
+                  fontWeight: 900,
+                  lineHeight: 1.2,
+                }}
+              >
+                First login
+              </h2>
+
+              <p
+                style={{
+                  margin: "10px 0 0",
+                  color: "#dcfce7",
+                  fontSize: "14px",
+                  lineHeight: 1.6,
+                }}
+              >
+                First login to ask a crop problem. After login, you can post crop issues with photos and get community or expert help.
+              </p>
+            </div>
+
+            <div style={{ padding: "24px" }}>
+              <div
+                style={{
+                  background: "#f0fdf4",
+                  border: "1px solid #bbf7d0",
+                  borderRadius: "18px",
+                  padding: "14px",
+                  marginBottom: "18px",
+                  color: "#166534",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                  lineHeight: 1.5,
+                }}
+              >
+                This popup will appear only on Home page when user is not logged in.
+              </div>
+
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "1fr 1fr",
+                  gap: "12px",
+                }}
+              >
+                <button
+                  onClick={() => {
+                    setShowFarmerLoginPopup(false);
+                    navigate("/login");
+                  }}
+                  style={{
+                    padding: "13px 16px",
+                    borderRadius: "15px",
+                    border: "none",
+                    background: "#16a34a",
+                    color: "#fff",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                  }}
+                >
+                  Login
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowFarmerLoginPopup(false);
+                    navigate("/login");
+                  }}
+                  style={{
+                    padding: "13px 16px",
+                    borderRadius: "15px",
+                    border: "1px solid #bbf7d0",
+                    background: "#f0fdf4",
+                    color: "#166534",
+                    fontWeight: 800,
+                    cursor: "pointer",
+                  }}
+                >
+                  Register
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+
 
       {/* Space fixer because navbar is fixed */}
       <div
