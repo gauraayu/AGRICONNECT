@@ -169,53 +169,60 @@ const getServicesMenu = (t) => [
 
 const getSmartMenu = (t) => [
   {
-    label: t("nav_ai_doctor"),
-    path: "/smart/ai-doctor",
+    label: "AI Crop Doctor",
+    path: "/ai-crop-doctor",
     icon: FaRobot,
     color: "#4f46e5",
     bg: "#eef2ff",
+    desc: "Scan crop images and detect disease, pest or nutrient issues.",
   },
   {
-    label: t("nav_satellite"),
-    path: "/smart/satellite",
+    label: "Satellite Crop Monitoring",
+    path: "/satellite-crop-monitoring",
     icon: FaSatelliteDish,
     color: "#0f766e",
     bg: "#ccfbf1",
+    desc: "Monitor field health, vegetation and risk zones.",
   },
   {
-    label: t("nav_drone"),
-    path: "/smart/drone",
+    label: "Drone / Land Rover Monitor",
+    path: "/drone-land-rover-monitor",
     icon: FaPlane,
     color: "#ea580c",
     bg: "#fff7ed",
+    desc: "Inspect crop stress, pest risk and damaged field areas.",
   },
   {
-    label: t("nav_ml_yield"),
-    path: "/smart/yield",
+    label: "ML Yield Prediction",
+    path: "/ml-yield-prediction",
     icon: FaChartLine,
     color: "#16a34a",
     bg: "#f0fdf4",
+    desc: "Predict expected crop yield using farm input data.",
   },
   {
-    label: t("nav_arvr"),
-    path: "/smart/arvr",
+    label: "AR/VR Farming Training",
+    path: "/ar-vr-farming-training",
     icon: FaVrCardboard,
     color: "#9333ea",
     bg: "#faf5ff",
+    desc: "Learn farming techniques with videos and virtual training.",
   },
   {
-    label: t("nav_smart_irrigation"),
-    path: "/smart/irrigation",
+    label: "Smart Irrigation",
+    path: "/smart-irrigation",
     icon: FaWater,
     color: "#0284c7",
     bg: "#e0f2fe",
+    desc: "Get water-saving irrigation plans and techniques.",
   },
   {
-    label: t("nav_market_demand"),
-    path: "/smart/market-demand",
+    label: "Market Demand Prediction",
+    path: "/market-demand-prediction",
     icon: FaChartBar,
     color: "#db2777",
     bg: "#fdf2f8",
+    desc: "Predict demand, price movement and best selling time.",
   },
 ];
 
@@ -1001,14 +1008,22 @@ const Navbar = ({ darkMode, setDarkMode }) => {
                 />
 
                 <NavDropdown
-                  id="smart"
-                  label={t("nav_smart_farming")}
-                  items={SMART_MENU}
-                  isActive={pathStarts("/smart")}
-                  openId={openId}
-                  setOpenId={setOpenId}
-                  columns={2}
-                />
+  id="smart"
+  label={t("nav_smart_farming")}
+  items={SMART_MENU}
+  isActive={
+    pathStarts("/ai-crop-doctor") ||
+    pathStarts("/satellite-crop-monitoring") ||
+    pathStarts("/drone-land-rover-monitor") ||
+    pathStarts("/ml-yield-prediction") ||
+    pathStarts("/ar-vr-farming-training") ||
+    pathStarts("/smart-irrigation") ||
+    pathStarts("/market-demand-prediction")
+  }
+  openId={openId}
+  setOpenId={setOpenId}
+  columns={2}
+/>
 
                 <NavDropdown
                   id="services"

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import WeatherWidget from "../components/WeatherWidget";
 import { createPortal } from "react-dom";
+import FarmerDashboard from "./FarmerDashboard";
 import axios from "axios";
 import farmVideo from "../assets/farm-video.mp4";
 import gogLogo from "../assets/gog-logo.png";
@@ -1785,13 +1786,22 @@ const Home = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("agriUser");
-    if (stored) setUser(JSON.parse(stored));
+    const loadUser = () => {
+      const stored = localStorage.getItem("agriUser");
+      setUser(stored ? JSON.parse(stored) : null);
+    };
+
+    loadUser();
+
+    window.addEventListener("storage", loadUser);
+
+    return () => window.removeEventListener("storage", loadUser);
   }, []);
 
-  // Keep your existing FarmerDashboard / AgronomistDashboard here
-  // if (user && user.role === "farmer") return <FarmerDashboard user={user} />;
-  // if (user && user.role === "agronomist") return <AgronomistDashboard user={user} />;
+  if (user && user.role === "farmer") {
+    return <FarmerDashboard user={user} />;
+  }
+
   return <DefaultHome />;
 };
 

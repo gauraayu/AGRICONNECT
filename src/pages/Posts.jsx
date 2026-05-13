@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import {
   AlertCircle,
   AlertTriangle,
@@ -9,6 +10,9 @@ import {
   Camera,
   CheckCircle,
   ChevronDown,
+  Lock,
+LogIn,
+UserPlus,
   ChevronRight,
   ChevronUp,
   Clock,
@@ -1106,10 +1110,52 @@ const CreatePostModal = ({ open, onClose, onCreated, user }) => {
     </div>
   );
 };
+const LoginFirstCard = () => {
+  return (
+    <div className="mt-8 rounded-3xl bg-gradient-to-br from-green-700 via-emerald-700 to-green-900 p-8 md:p-10 text-center text-white shadow-xl border border-green-200">
+      <div className="w-20 h-20 mx-auto rounded-3xl bg-white/15 border border-white/20 flex items-center justify-center mb-5">
+        <Lock className="w-10 h-10 text-white" />
+      </div>
 
+      <p className="text-green-100 text-xs font-black uppercase tracking-[0.25em] mb-3">
+        Community Access
+      </p>
+
+      <h2 className="text-2xl md:text-4xl font-black mb-3">
+        Login first or register to view more posts
+      </h2>
+
+      <p className="text-green-100 max-w-2xl mx-auto mb-7">
+        You can see only a few community posts. To view more farmer posts,
+        expert replies, and discussions, please login or register first.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <Link
+          to="/login"
+          className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-white text-green-700 font-black hover:bg-green-50 transition shadow-lg"
+        >
+          <LogIn className="w-5 h-5" />
+          Login
+        </Link>
+
+        <Link
+          to="/login"
+          className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-2xl bg-green-950/70 border border-white/20 text-white font-black hover:bg-green-950 transition"
+        >
+          <UserPlus className="w-5 h-5" />
+          Register
+        </Link>
+      </div>
+    </div>
+  );
+};
 const Posts = () => {
   const user = safeParseUser();
-
+  const isLoggedIn = Boolean(user?.id || user?._id || user?.email);
+  
+  const FREE_POST_LIMIT = 2;
+  
   const [posts, setPosts] = useState([]);
   const [userVotes, setUserVotes] = useState({});
   const [search, setSearch] = useState("");
@@ -1222,7 +1268,11 @@ const Posts = () => {
       return dateB - dateA;
     });
   }, [filteredPosts, tab]);
+  const visiblePosts = isLoggedIn
+    ? sortedPosts
+    : sortedPosts.slice(0, FREE_POST_LIMIT);
 
+  const hiddenPostsCount = Math.max(sortedPosts.length - visiblePosts.length, 0);
   const updatePostOnBackend = async (post, payload) => {
     if (isStaticPost(post)) return;
 
@@ -1696,8 +1746,9 @@ const Posts = () => {
                   + Create First Post
                 </button>
               </div>
-            ) : (
-              sortedPosts.map((post) => {
+           ) : (
+  <>
+    {visiblePosts.map((post) => {
                 const postId = getPostId(post);
                 const photos = getPhotos(post);
                 const photo = photos[0];
@@ -2032,8 +2083,11 @@ const Posts = () => {
                     </div>
                   </article>
                 );
-              })
-            )}
+                            })}
+
+    {!isLoggedIn && hiddenPostsCount > 0 && <LoginFirstCard />}
+  </>
+)}
           </main>
 
           <aside className="space-y-4 xl:sticky xl:top-24">
